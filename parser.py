@@ -39,13 +39,15 @@ def get_soup():
     for article in soup.find_all('article'):
         
         title = article.h3.text
-        description = article.p.text
+        post_url = article.h3.a['href']
+        post_image = article.find("img", {"class":"wp-post-image"})['src']
         author = article.find("span", {"class":"fn"}).text
         category = article.find("a", {"rel":"category"}).text
-        post_image = article.find("img", {"class":"wp-post-image"})['src']
+        description = article.p.text
         
         print (
             title, "\n",
+            post_url, "\n",
             post_image, "\n",
             author, "\n",
             category, "\n",
