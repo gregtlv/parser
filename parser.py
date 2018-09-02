@@ -5,10 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 
 date_end = "2016/09/15"
+date_start = date(2015,11,12) #-1
 
 def get_date():
-    date_start = date(2015,11,12) #-1
-    date_end = date(2018,8,15)
+    global current_date, date_start
 
     date_start += timedelta(days=1)
 
@@ -53,6 +53,7 @@ def get_soup():
             category, "\n",
             description, "\n"
             )
+    get_soup()
     
 def go():
     get_soup()
