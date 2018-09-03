@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import date, timedelta
-import requests, os
+import requests, os, codecs
 from bs4 import BeautifulSoup
 
 date_end = "2016/09/15"
@@ -25,7 +25,7 @@ def get_url():
 
 def make_request():
     try:
-        request = requests.get(get_url())
+            request = requests.get(get_url())
     except:
         print ("make_request error")
         go()
@@ -44,13 +44,18 @@ def make_request():
         del request
         
 def save_soup():
-    file = open("./" + current_date + ".html", "w")
-    file.write(make_request())
+    file = open("./" + str(current_date) +
+                "/" + str(current_date) + ".html", "w")
+    file.write(str(make_request()))
     file.close()
+    del file
     
 def get_soup():
     soup = BeautifulSoup(make_request(), "html.parser")
 
+    soup_file = codecs.open("./" + str(current_date) + "/" + str(current_date) + ".html", "w", encoding="utf-8")
+    soup_file.write(str(soup))
+    soup_file.close()
     for article in soup.find_all('article'):
         
         try:
@@ -104,7 +109,8 @@ def get_soup():
             category_url, "\n",
             description, "\n"
             )
-        file = open("general.txt", "a").write(
+        file = codecs.open("general.txt", "a", encoding='utf-8')
+        file.write(
             title + "|||" +
             post_url + "|||" +
             post_image + "|||" +
@@ -112,11 +118,17 @@ def get_soup():
             author_url + "|||" +
             category.text + "|||" +
             category_url + "|||" +
-            description + "%\n"
-                        ).encode('utf-8')
+            description + "\n"
+            )
         
-        del title, post_url, post_image, author, author_url, category, category_url, description
+        all_posts_url = codecs.open("all_posts_urls.txt", "a", encoding='utf-8')
+        all_posts_url.write(post_url + "\n")
+        all_posts_url.close()
+        
+        
+        del title, post_url, post_image, author, author_url, category, category_url, description, all_posts_url
     file.close()
+    
     del soup, file
     get_soup()
     
