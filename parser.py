@@ -42,12 +42,15 @@ def make_request():
         request.connection.close()
         return request.content
         del request
-
-def get_soup():
-    soup_fle_name = current_date + ".html"
-    soup_file = open("./", soup_fle_name)
-    soup = BeautifulSoup(make_request(), "html.parser")
+        
+def save_soup():
+    file = open("./" + current_date + ".html", "w")
+    file.write(make_request())
+    file.close()
     
+def get_soup():
+    soup = BeautifulSoup(make_request(), "html.parser")
+
     for article in soup.find_all('article'):
         
         try:
@@ -101,10 +104,20 @@ def get_soup():
             category_url, "\n",
             description, "\n"
             )
-            
+        file = open("general.txt", "a").write(
+            title + "|||" +
+            post_url + "|||" +
+            post_image + "|||" +
+            author.text + "|||" +
+            author_url + "|||" +
+            category.text + "|||" +
+            category_url + "|||" +
+            description + "%\n"
+                        ).encode('utf-8')
+        
         del title, post_url, post_image, author, author_url, category, category_url, description
-
-    del soup
+    file.close()
+    del soup, file
     get_soup()
     
 def go():
